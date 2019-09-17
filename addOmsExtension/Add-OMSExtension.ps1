@@ -146,7 +146,7 @@ foreach ($vm in $vms)
             #Make sure the extension is not already installed before attempting to install it
             if (-not $extensions)
             {
-                Write-Output "Adding Windows extension to VM: $($vm.Name)"
+                Write-Output "Adding MicrosoftMonitoringAgent extension to VM: $($vm.Name)"
                 $result = Set-AzureRmVMExtension -ExtensionName "Microsoft.EnterpriseCloud.Monitoring" `
                     -ResourceGroupName $vm.ResourceGroupName `
                     -VMName $vm.Name `
@@ -169,7 +169,7 @@ foreach ($vm in $vms)
             #Make sure the extension is not already installed before attempting to install it
             if (-not $extensions)
             {
-                Write-Output "Adding Linux extension to VM: $($vm.Name)"
+                Write-Output "Adding OmsAgentForLinux extension to VM: $($vm.Name)"
                 $result = Set-AzureRmVMExtension -ExtensionName "OmsAgentForLinux" `
                     -ResourceGroupName $vm.ResourceGroupName `
                     -VMName $vm.Name `
