@@ -141,8 +141,7 @@ foreach ($vm in $vms)
         #Check to see if Linux or Windows
         if ($vm.OsProfile.LinuxConfiguration -eq $null)
         {
-            $extensions = Get-AzureRmVMExtension -ResourceGroupName $vm.ResourceGroupName -VMName $vm.Name -Name 'Microsoft.EnterpriseCloud.Monitoring' -ErrorAction SilentlyContinue
-            Write-Output "VM config = $($vm.OsProfile.LinuxConfiguration)"
+            $extensions = Get-AzureRmVMExtension -ResourceGroupName $vm.ResourceGroupName -VMName $vm.Name -Name 'Microsoft.EnterpriseCloud.Monitoring' -ErrorAction SilentlyContinue            
             #Make sure the extension is not already installed before attempting to install it
             if (-not $extensions)
             {
