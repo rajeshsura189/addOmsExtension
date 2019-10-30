@@ -61,9 +61,11 @@ Param
 $connectionName = "AzureRunAsConnection"
 
 # Get the connection "AzureRunAsConnection "
-$servicePrincipalConnection = Get-AutomationConnection -Name $connectionName -ErrorAction Stop
+$servicePrincipalConnection = Get-AutomationConnection `
+    -Name $connectionName -ErrorAction Stop
 
-"Logging in to Azure..."
+Write-Output "Logging in to Azure..."
+
 Add-AzureRmAccount `
     -ServicePrincipal `
     -TenantId $servicePrincipalConnection.TenantId `
@@ -72,14 +74,15 @@ Add-AzureRmAccount `
     -EnvironmentName $azureEnvironment `
     -ErrorAction Stop
 
-$azContext = Select-AzureRmSubscription -subscriptionId $azureSubscriptionID -ErrorAction Stop
+$azContext = Select-AzureRmSubscription `
+    -subscriptionId $azureSubscriptionID -ErrorAction Stop
 
 $vms = @()
 
 if (-not $ResourceGroupNames -and -not $VMNames)
 {
     Write-Output "No resource groups or VMs specified. Collecting all VMs"
-    $vms = Get-AzureRMVM
+    $vms = Get-AzureRmVM
 }
 elseif ($ResourceGroupNames -and -not $VMNames)
 {
@@ -104,7 +107,7 @@ else
             Write-Error -Message "Found multiple VMs with the name $VMName. Unable to configure extension"
         }
 
-        $vms += Get-AzureRMVM -Name $VMName -ResourceGroupName $azureResource.ResourceGroupName
+        $vms += Get-AzureRmVM -Name $VMName -ResourceGroupName $azureResource.ResourceGroupName
     }
 }
 
@@ -139,7 +142,7 @@ foreach ($vm in $vms)
         }
 
         #Check to see if Linux or Windows
-        if ($vm.OsProfile.LinuxConfiguration -eq $null)
+        if ($vm.StorageProfile.OsDisk.OsType -eq 'Windows')
         {
             $extensions = Get-AzureRmVMExtension -ResourceGroupName $vm.ResourceGroupName -VMName $vm.Name -Name 'Microsoft.EnterpriseCloud.Monitoring' -ErrorAction SilentlyContinue            
             #Make sure the extension is not already installed before attempting to install it
@@ -161,7 +164,7 @@ foreach ($vm in $vms)
                 Write-Output "Skipping VM - Extension already installed"
             }
         }
-        else
+        elseif($vm.StorageProfile.OsDisk.OsType -eq 'Linux')
         {
             $extensions = Get-AzureRmVMExtension -ResourceGroupName $vm.ResourceGroupName -VMName $vm.Name -Name 'OmsAgentForLinux' -ErrorAction SilentlyContinue
 
