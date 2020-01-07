@@ -146,7 +146,7 @@ foreach ($vm in $vms)
         if (-not $extensions)
         {
             Write-Output "Adding MicrosoftMonitoringAgent extension to VM: $($vm.Name)"
-            $result = Set-AzureRmVMExtension -ExtensionName "Microsoft.EnterpriseCloud.Monitoring" `
+            $result = Set-AzureRmVMExtension -ExtensionName "MicrosoftMonitoringAgent" `
                 -ResourceGroupName $vm.ResourceGroupName `
                 -VMName $vm.Name `
                 -Publisher "Microsoft.EnterpriseCloud.Monitoring" `
